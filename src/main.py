@@ -9,6 +9,7 @@ from redis.asyncio.client import Redis
 import asyncpg
 
 from src.core.config import settings
+from src.db.utils import prepare_pg_db
 
 description = """
 ### API for redirecting to long links.<br>
@@ -19,9 +20,8 @@ description = """
 async def lifespan(app: FastAPI):
     redis_connection = await Redis(host=settings.redis_host, port=settings.redis_port)
     pg_connection = await asyncpg.connect(settings.pg_dsn)
-    print(pg_connection)
-    spam = await pg_connection.execute('CREATE SCHEMA IF NOT EXISTS us_schema;')
-    print(spam)
+    await prepare_pg_db(pg_connection)
+
     yield
 
     await redis_connection.close()
