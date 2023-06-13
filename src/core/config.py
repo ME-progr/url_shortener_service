@@ -1,4 +1,4 @@
-"""Модуль содержит настройки для работы FastApi-приложения."""
+"""The module contains setups FastApi-application."""
 
 from os import path as os_path
 from pathlib import Path
@@ -23,6 +23,9 @@ class Settings(BaseSettings):
 
     pg_host: str = Field(env='POSTGRES_HOST')
     pg_port: int = Field(env='POSTGRES_PORT')
+    pg_dsn: str = Field(env='POSTGRES_DSN')
+    pg_schema: str = Field(env='POSTGRES_SCHEMA')
+    pg_table: str = Field(env='POSTGRES_TABLE')
 
     class Config:
         env_file = project_env

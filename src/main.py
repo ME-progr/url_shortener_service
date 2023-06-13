@@ -1,4 +1,4 @@
-"""Модуль, запускающий FastApi-приложение."""
+"""Module for start FastApi-application."""
 
 from contextlib import asynccontextmanager
 
@@ -6,21 +6,26 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from redis.asyncio.client import Redis
+import asyncpg
 
 from src.core.config import settings
 
 description = """
-### API для перенаправления на длинные ссылки.<br>
+### API for redirecting to long links.<br>
 """
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     redis_connection = await Redis(host=settings.redis_host, port=settings.redis_port)
-    await redis_connection.set('test_key', '11111111111111')
+    pg_connection = await asyncpg.connect(settings.pg_dsn)
+    print(pg_connection)
+    spam = await pg_connection.execute('CREATE SCHEMA IF NOT EXISTS us_schema;')
+    print(spam)
     yield
 
     await redis_connection.close()
+
 
 app = FastAPI(
     title=settings.project_name,
