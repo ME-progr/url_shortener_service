@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
     yield
 
     await redis_connection.close()
-
+    await pg_connection.close()
 
 app = FastAPI(
     title=settings.project_name,
